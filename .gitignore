@@ -1,0 +1,12 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Secrets
+.env
+
+# Models are downloaded at start-up
+models/*.task
+models/*.download
