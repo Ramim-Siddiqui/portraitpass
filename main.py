@@ -55,7 +55,7 @@ remover = BackgroundRemover(
 pipeline_lock = threading.Lock()
 
 # Initialize FastAPI App
-app = FastAPI(title="Student Portrait Background Remover API")
+app = FastAPI(title="PortraitPass API")
 
 def verify_api_key(x_api_key: str | None = None):
     # API_KEY may come from the environment or from .env (read by Settings).

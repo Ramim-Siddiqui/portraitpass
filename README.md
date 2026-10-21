@@ -1,10 +1,12 @@
-# Student Portrait Processor
+# PortraitPass
 
-A FastAPI service that checks student ID photos and removes their background.
+Checks student ID photos and removes their background. It runs as a FastAPI service for portals and as a Gradio demo on Hugging Face.
+
+**Live demo:** [huggingface.co/spaces/ramimali/student-portrait-bg-remover](https://huggingface.co/spaces/ramimali/student-portrait-bg-remover)
 
 Every upload is validated against a portrait policy: one person, a face the camera can see, a head turned toward the camera, no full-body shots and no blur. An accepted photo comes back as a transparent PNG cut out with BiRefNet Portrait. A rejected photo comes back with machine-readable codes and plain-English messages, so the portal that called the service can tell the student exactly what to fix.
 
-**Built with:** FastAPI, MediaPipe Face Landmarker and Pose Landmarker, BiRefNet Portrait (Hugging Face Transformers, PyTorch), OpenCV, Pillow, Docker.
+**Built with:** FastAPI, Gradio, MediaPipe Face Landmarker and Pose Landmarker, BiRefNet Portrait (Hugging Face Transformers, PyTorch), OpenCV, Pillow, Docker, Hugging Face Spaces (ZeroGPU).
 
 ## How it works
 
@@ -70,6 +72,15 @@ python -m venv .venv
 curl.exe -F "file=@photo.jpg" http://127.0.0.1:8000/remove-bg -o cutout.png
 ```
 
+## The Hugging Face demo
+
+`app.py` is the Gradio front end that runs on Hugging Face Spaces. It uses the same validation and background-removal code, and runs BiRefNet on a ZeroGPU GPU through the `spaces` package. Its API name is `/process_portrait`; the Space's **Use via API** panel shows the request format. To run it locally:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install gradio spaces
+.\.venv\Scripts\python.exe app.py
+```
+
 ## Run it with Docker
 
 ```powershell
@@ -96,6 +107,7 @@ Settings come from environment variables or a `.env` file (see `app/config.py` f
 
 ```
 main.py            HTTP API, model download, API key
+app.py             Gradio demo for Hugging Face Spaces
 app/image_io.py    upload checks and decoding
 app/validator.py   face, pose, framing and quality checks
 app/remover.py     BiRefNet background removal
